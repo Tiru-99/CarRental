@@ -417,36 +417,36 @@ export default function IntegratedCarRentalForm() {
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Client Registration</h1>
       <Section title="Personal Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Full Name" id="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} />
-          <InputField label="Email" id="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} />
-          <InputField label="Phone Number" id="phone" type="tel" placeholder="+1234567890" value={formData.phone} onChange={handleChange} />
-          <InputField label="Address" id="address" placeholder="123 Main St, City, Country" value={formData.address} onChange={handleChange} />
+          <InputField label="Full Name" id="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} required/>
+          <InputField label="Email" id="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required/>
+          <InputField label="Phone Number" id="phone" type="tel" placeholder="+1234567890" value={formData.phone} onChange={handleChange} required/>
+          <InputField label="Address" id="address" placeholder="123 Main St, City, Country" value={formData.address} onChange={handleChange} required />
           <InputField label="Date of Birth" id="dob" type="date" value={formData.dob} onChange={handleChange} />
         </div>
       </Section>
 
       <Section title="Passport Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} />
-          <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange}/>
+          <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} required/>
+          <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange} required/>
           {passportImage && (
              <div className='mt-2 '>
                 <img src={passportImage} alt="passport-image" className="w-32 h-32 object-cover" />
                 <span className="text-sm text-green-600">✓ Passport Image uploaded</span>
              </div>
           )}
-          <InputField label="Issue Date" id="passportIssueDate" type="date" value={formData.passportIssueDate} onChange={handleChange} />
-          <InputField label="Expiry Date" id="passportExpiryDate" type="date" value={formData.passportExpiryDate} onChange={handleChange} />
+          <InputField label="Issue Date" id="passportIssueDate" type="date" value={formData.passportIssueDate} onChange={handleChange} required/>
+          <InputField label="Expiry Date" id="passportExpiryDate" type="date" value={formData.passportExpiryDate} onChange={handleChange} required/>
         </div>
       </Section>
 
       <Section title="Emirates ID & License Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Emirates ID" id="emiratesId" placeholder="784-1234-1234567-1" value={formData.emiratesId} onChange={handleChange} />
-          <InputField label="License Number" id="licenseNumber" placeholder="12345678" value={formData.licenseNumber} onChange={handleChange} />
-          <InputField label="License Number 2 (optional)" id="licenseNumber2" placeholder="12345678" value={formData.licenseNumber2} onChange={handleChange}/>
-          <InputField label="License Issue Date" id="licenseIssueDate" type="date" value={formData.licenseIssueDate} onChange={handleChange} />
-          <InputField label="License Expiry Date" id="licenseExpiryDate" type="date" value={formData.licenseExpiryDate} onChange={handleChange} />
+          <InputField label="Emirates ID" id="emiratesId" placeholder="784-1234-1234567-1" value={formData.emiratesId} onChange={handleChange} required/>
+          <InputField label="License Number" id="licenseNumber" placeholder="12345678" value={formData.licenseNumber} onChange={handleChange} required/>
+          <InputField label="License Number 2 (optional)" id="licenseNumber2" placeholder="12345678" value={formData.licenseNumber2} onChange={handleChange} required/>
+          <InputField label="License Issue Date" id="licenseIssueDate" type="date" value={formData.licenseIssueDate} onChange={handleChange} required/>
+          <InputField label="License Expiry Date" id="licenseExpiryDate" type="date" value={formData.licenseExpiryDate} onChange={handleChange} required/>
         </div>
       </Section>
 
@@ -464,10 +464,10 @@ export default function IntegratedCarRentalForm() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               ></textarea>
             </div>
-            <InputField label="Car Fuel" id="carFuel" placeholder="e.g., Petrol, Diesel, Electric" value={formData.carFuel} onChange={handleChange} />
-            <InputField label="Car Rent Charges" id="rentCharges" type="number" placeholder="Enter daily rate" value={formData.rentCharges} onChange={handleChange} />
+            <InputField label="Car Fuel" id="carFuel" placeholder="e.g., Petrol, Diesel, Electric" value={formData.carFuel} onChange={handleChange} required/>
+            <InputField label="Car Rent Charges" id="rentCharges" type="number" placeholder="Enter daily rate" value={formData.rentCharges} onChange={handleChange} required/>
             <InputField label="Trip Start Date" id="rentalDate" type="date" value={formData.rentalDate} onChange={handleChange} />
-            <InputField label="Rental Location" id="rentalLocation" placeholder="Enter pickup location" value={formData.rentalLocation} onChange={handleChange} />
+            <InputField label="Rental Location" id="rentalLocation" placeholder="Enter pickup location" value={formData.rentalLocation} onChange={handleChange} required/>
           </div>
           
           <div>
@@ -490,7 +490,7 @@ export default function IntegratedCarRentalForm() {
           </div>
           
           <FileInput label="Fuel Image" id="fuelImage"
-          onChange={handleFuelImageChange} />
+          onChange={handleFuelImageChange} required/>
 
           {fuelImage && (
             <div className="mt-2">

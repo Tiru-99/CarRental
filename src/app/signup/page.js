@@ -46,7 +46,7 @@ const SignUp = () => {
           setFormData({ username: "", email: "", password: "" }); 
           alert("Account Created Successfully");
           window.location.href('/signin')
-          
+
         } else {
           setMessage(result.message); // Display error message from API
         }
@@ -87,7 +87,7 @@ const SignUp = () => {
               alt="Autobreeze Logo"
               className="mx-auto mb-4"
             />
-            <h2 className="text-2xl font-semibold">Sign Up</h2>
+            <h2 className="text-2xl text-left font-semibold">Sign Up</h2>
           </div>
 
           <form onSubmit={handleSubmit}>
