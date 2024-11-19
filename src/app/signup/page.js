@@ -81,9 +81,9 @@ const SignUp = () => {
       {/* Right Section */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="mb-8 text-center">
+          <div className="mb-8 text-center md:mr-36">
             <img
-              src="https://via.placeholder.com/150x50" // Replace with your logo URL
+              src="/images/logo.png" // Replace with your logo URL
               alt="Autobreeze Logo"
               className="mx-auto mb-4"
             />
