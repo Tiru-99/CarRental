@@ -9,9 +9,9 @@ import { isUserLoggedIn } from "@/utils/appwriteAuth";
 
 export default function UserPage() {
   const { id } = useParams();
-  const router = useRouter(); // Always define hooks at the top level
-  const userId = Array.isArray(id) ? id[0] : id; // Handle cases where id might be an array
-  const [tripDetails, setTripDetails] = useState(null);
+  const router = useRouter(); // Always define hooks at the top level 
+  const userId = Array.isArray(id) ? id[0] : id; // Handle cases where id might be an array 
+  const [tripDetails, setTripDetails] = useState(null); 
   const [loading, setLoading] = useState(true);
 
   // Check login status
