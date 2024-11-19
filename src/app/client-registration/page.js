@@ -6,6 +6,7 @@ import {nanoid} from 'nanoid';
 import { databases } from '../../utils/appwriteConf';
 import { uploadFileToAppwrite } from '../../utils/appwriteConf';
 import { ID } from 'appwrite';
+import Navbar from '@/components/Navbar';
 
 const InputField = ({ label, id, type = 'text', placeholder, value, onChange }) => (
   <div className="mb-4">
@@ -229,6 +230,8 @@ export default function IntegratedCarRentalForm() {
     address: '',
     dob: '',
     passportId: '',
+    passportIssueDate:'',
+    passportExpiryDate:'',
     emiratesId: '',
     licenseNumber: '',
     licenseNumber2:'',
@@ -260,7 +263,7 @@ export default function IntegratedCarRentalForm() {
     setFormData(prevData => ({ ...prevData, [id]: value }));
   };
 
-  console.log(carImages);
+ console.log(formData);
 
   //Function to save the Image 
   const handleImageSave = (angleIndex, imageData) => {
@@ -293,9 +296,7 @@ export default function IntegratedCarRentalForm() {
     }
   };
 
-  console.log(carImages);
-  console.log(fuelImage)
-
+  
 
  const handleGeneratePDF = async(formData , carImages , fuelImage , passportImage) => {
   try {
@@ -364,6 +365,15 @@ export default function IntegratedCarRentalForm() {
                 clientId: uniqueId,
                 fullName: formData?.fullName || '',
                 email: formData?.email || '',
+                dob : formData?.dob || '',
+                passportId : formData?.passportId || '',
+                passportIssueDate: formData?.passportIssueDate || '',
+                passportExpiryDate : formData?.passportExpiryDate || '',
+                emiratesId : formData?.emiratesId || '',
+                licenseNumber : formData?.licenseNumber || '',
+                licenseNumber2 : formData?.licenseNumber2 || '',
+                licenseExpiryDate : formData?.licenseExpiryDate || '',
+                licenseIssueDate : formData?.licenseIssueDate || '',
                 phone: formData?.phone || '',
                 address: formData?.address || '',
                 carImageIds: uploadedImages,
@@ -383,7 +393,8 @@ export default function IntegratedCarRentalForm() {
 
   return (
     <div>
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <Navbar></Navbar>
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Client Registration</h1>
       <Section title="Personal Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -398,7 +409,7 @@ export default function IntegratedCarRentalForm() {
       <Section title="Passport Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} />
-          <FileInput label="Passport Photo" id="passportPhoto" onChange={handlePassportImageChange}/>
+          <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange}/>
           {passportImage && (
              <div className='mt-2 '>
                 <img src={passportImage} alt="passport-image" className="w-32 h-32 object-cover" />

@@ -122,4 +122,31 @@ export const uploadFileToAppwrite = async (fileData, bucketId, fileType = null, 
     }
 };
 
+export const getEvents = async () => {
+    try {
+      const response = await databases.listDocuments(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID, // Fixed variable name typo
+        process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID
+      );
+  
+      // Map over the documents to format user objects
+      const Users = response.documents.map((document) => ({
+        $id: document.$id, // Correct property name for document ID
+        fullName: document.fullName,
+        email: document.email,
+        pdfFileID: document.pdfFileID,
+        passportImageId:document.passportImageId,
+        passportImageUrl: storage.getFilePreview(
+        process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, // Bucket ID for your storage
+        document.passportImageId // Image file ID
+      ), // Generates the URL to preview the image
+    }));
+  
+      return { Users };
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      return { Users: [], error: error.message }; // Return an empty array with the error message
+    }
+  };
+
 export { client, databases, storage };
