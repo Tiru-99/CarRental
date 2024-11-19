@@ -42,8 +42,11 @@ const SignUp = () => {
         );
 
         if (result.success) {
-          alert("Account Created Successfully");// Display success message
+          // Display success message
           setFormData({ username: "", email: "", password: "" }); 
+          alert("Account Created Successfully");
+          window.location.href('/signin')
+          
         } else {
           setMessage(result.message); // Display error message from API
         }

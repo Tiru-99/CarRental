@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import { loginUser } from "../../utils/appwriteAuth"; // Import the loginUser function
-import { useRouter } from "next/router";
+
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-
 
   const [message, setMessage] = useState("");
 
@@ -23,7 +21,7 @@ const SignIn = () => {
     }));
   };
   
-  const router = useRouter(); 
+ 
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -43,7 +41,7 @@ const SignIn = () => {
 
       if (result.success) {
         alert("You have successfully signed in ");
-        window.location.href = '/dashboard';
+        window.location.href = '/';
         // Redirect to dashboard or another page (e.g., window.location.href = "/dashboard";)
       } else {
         setMessage(result.message); // Display error message from the API

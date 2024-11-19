@@ -72,3 +72,20 @@ export const getCurrentUser = async () => {
     };
   }
 };
+
+// Function to check if the user is logged in
+export const isUserLoggedIn = async () => {
+  try {
+    const response = await account.get(); // Fetch the current user's details
+    return {
+      success: true,
+      message: "User is logged in.",
+      data: response,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "User is not logged in.",
+    };
+  }
+};

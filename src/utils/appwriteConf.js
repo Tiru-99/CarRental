@@ -149,4 +149,40 @@ export const getEvents = async () => {
     }
   };
 
+
+  export const getCarAndClientDetails = async (id) => {
+    if (!id) {
+      console.error('No document ID provided');
+      return null;
+    }
+
+    
+  
+    try {
+      // Fetch the document using the provided `id`
+      const response = await databases.getDocument(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+        process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID, 
+        id
+      );
+  
+      const details = {
+        carInfo: response.carInfo,
+        rentCharges: response.rentCharges,
+        rentalDate: response.rentalDate,
+        fullName: response.fullName,
+        email: response.email,
+        passportImageId: response.passportImageId,
+        passportImageUrl: storage.getFilePreview(
+          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+          response.passportImageId
+        ),
+      }
+  
+      return { details };
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return null;
+    }
+  };
 export { client, databases, storage };

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { PDFDownloadLink, Document, Page, View, Text, Image, StyleSheet,pdf } from '@react-pdf/renderer';
 import ImageDrawForm from '../../components/ImageEditor';
 import {nanoid} from 'nanoid';
@@ -7,6 +7,8 @@ import { databases } from '../../utils/appwriteConf';
 import { uploadFileToAppwrite } from '../../utils/appwriteConf';
 import { ID } from 'appwrite';
 import Navbar from '@/components/Navbar';
+import { useRouter } from 'next/navigation';
+import { isUserLoggedIn } from '@/utils/appwriteAuth';
 
 const InputField = ({ label, id, type = 'text', placeholder, value, onChange }) => (
   <div className="mb-4">
@@ -232,6 +234,7 @@ export default function IntegratedCarRentalForm() {
     passportId: '',
     passportIssueDate:'',
     passportExpiryDate:'',
+    
     emiratesId: '',
     licenseNumber: '',
     licenseNumber2:'',
@@ -245,6 +248,19 @@ export default function IntegratedCarRentalForm() {
   });
 
   const uniqueId = nanoid();
+  const router = useRouter(); 
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const status = await isUserLoggedIn();
+      if (!status.success) {
+        alert("You need to be logged in first to use the app")
+        router.push("/signin"); // Redirect to login page if not logged in
+      }
+    };
+
+    checkUser();
+  },[router])
 
   const[carImages , setCarImages] = useState({
     angle1 : null , 
@@ -255,7 +271,7 @@ export default function IntegratedCarRentalForm() {
   }); 
 
   const[fuelImage , setFuelImage] = useState(null);
-  const[pdfblob ,setPdfBlob] = useState(null);
+  // const[pdfblob ,setPdfBlob] = useState(null);
   const[passportImage ,setPassportImage] = useState(null);
 
   const handleChange = (e) => {
@@ -366,6 +382,7 @@ export default function IntegratedCarRentalForm() {
                 fullName: formData?.fullName || '',
                 email: formData?.email || '',
                 dob : formData?.dob || '',
+                carInfo : formData?.carInfo || '',
                 passportId : formData?.passportId || '',
                 passportIssueDate: formData?.passportIssueDate || '',
                 passportExpiryDate : formData?.passportExpiryDate || '',
@@ -375,6 +392,8 @@ export default function IntegratedCarRentalForm() {
                 licenseExpiryDate : formData?.licenseExpiryDate || '',
                 licenseIssueDate : formData?.licenseIssueDate || '',
                 phone: formData?.phone || '',
+                rentalDate : formData?.rentalDate || '',
+                rentCharges : formData?.rentCharges || '',
                 address: formData?.address || '',
                 carImageIds: uploadedImages,
                 passportImageId: passportImageId || '',
@@ -447,7 +466,7 @@ export default function IntegratedCarRentalForm() {
             </div>
             <InputField label="Car Fuel" id="carFuel" placeholder="e.g., Petrol, Diesel, Electric" value={formData.carFuel} onChange={handleChange} />
             <InputField label="Car Rent Charges" id="rentCharges" type="number" placeholder="Enter daily rate" value={formData.rentCharges} onChange={handleChange} />
-            <InputField label="Rental Date" id="rentalDate" type="date" value={formData.rentalDate} onChange={handleChange} />
+            <InputField label="Trip Start Date" id="rentalDate" type="date" value={formData.rentalDate} onChange={handleChange} />
             <InputField label="Rental Location" id="rentalLocation" placeholder="Enter pickup location" value={formData.rentalLocation} onChange={handleChange} />
           </div>
           
