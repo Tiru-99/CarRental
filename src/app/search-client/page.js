@@ -29,9 +29,7 @@ export default function SearchClient() {
       } catch (err) {
         console.error("Error fetching users:", err)
         setError("Failed to fetch users.")
-      } finally {
-        setLoading(false)
-      }
+      } 
     }
 
     fetchUsers()

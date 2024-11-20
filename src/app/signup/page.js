@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { registerUser } from '../../utils/appwriteAuth';
 import { Loader2 } from "lucide-react"; // Ensure this import is correct and lucide-react is installed
+import {toast} from 'react-toastify'
 
 const SignUp = () => {
   const [formData, setFormData] = useState({

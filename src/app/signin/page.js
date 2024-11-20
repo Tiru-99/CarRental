@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import { loginUser } from "../../utils/appwriteAuth"; // Import the loginUser function
 import { Loader2 } from "lucide-react"; // Import Loader2 icon from lucide-react or ensure it's the correct import
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { isUserLoggedIn } from "../../utils/appwriteAuth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -21,37 +24,48 @@ const SignIn = () => {
     }));
   };
 
+  const router = useRouter(); 
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const status = await isUserLoggedIn();
+      if (status.success) {
+        router.push("/"); // Redirect to login page if not logged in
+      }
+    };
+
+    checkUser();
+  }, [router]);
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Basic validation
     if (!formData.email || !formData.password) {
       setMessage("Both email and password are required!");
       return;
     }
-
+  
     setLoading(true); // Show loader
     setMessage(""); // Clear previous messages
-
+  
     try {
       // Call the loginUser function with the email and password
       const result = await loginUser(formData.email, formData.password);
+      toast.success("You have successfully signed in.");
+      window.location.href = "/";
 
-      if (result.success) {
-        toast.success("You have successfully signed in.");
-        window.location.href = "/";
-        // Redirect to dashboard or another page
-      } else {
-        setMessage(result.message); // Display error message from the API
-      }
+  
     } catch (error) {
-      console.error("Error during sign-in:", error);
-      setMessage("An unexpected error occurred.");
+      // Ensure that error is a string before setting message
+      setMessage(error.message || "An error occurred. Please try again.");
+      console.log("This is the error", error);
     } finally {
       setLoading(false); // Hide loader
     }
   };
+  
 
   return (
     <div className="flex h-screen">

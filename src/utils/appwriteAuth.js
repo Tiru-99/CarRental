@@ -24,21 +24,14 @@ export const registerUser = async (username, email, password) => {
 // Function to log in a user
 // Function to log in a user
 export const loginUser = async (email, password) => {
-    try {
-      const response = await account.createEmailPasswordSession(email, password); // Ensure the method name is correct
-      return {
-        success: true,
-        message: "User logged in successfully!",
-        data: response,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-  };
-  
+  try {
+   return await account.createEmailPasswordSession(email, password); // Ensure the method name is correct
+   
+  } catch (error) {
+    throw(error);
+  }
+};
+
 
 // Function to log out the user
 export const logoutUser = async () => {
