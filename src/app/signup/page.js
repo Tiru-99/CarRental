@@ -46,7 +46,7 @@ const SignUp = () => {
 
       if (result.success) {
         setFormData({ username: "", email: "", password: "" }); // Clear the form
-        alert("Account Created Successfully");
+        toast.success("Account Created Successfully");
         window.location.href = "/signin"; // Redirect to SignIn page
       } else {
         setMessage(result.message); // Display error message from API

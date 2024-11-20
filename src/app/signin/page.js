@@ -39,7 +39,7 @@ const SignIn = () => {
       const result = await loginUser(formData.email, formData.password);
 
       if (result.success) {
-        alert("You have successfully signed in.");
+        toast.success("You have successfully signed in.");
         window.location.href = "/";
         // Redirect to dashboard or another page
       } else {

@@ -6,12 +6,14 @@ import { getEvents } from "@/utils/appwriteConf"
 import Navbar from "@/components/Navbar"
 import { Search } from 'lucide-react'
 import Link from "next/link"
+import { getFileDownloadURL } from "@/utils/appwriteConf"
+import { toast } from "react-toastify"
+
 
 export default function SearchClient() {
   const [users, setUsers] = useState([])
   const [filteredUsers, setFilteredUsers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+ 
   const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
@@ -40,32 +42,43 @@ export default function SearchClient() {
       user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     )
     setFilteredUsers(results)
+
   }, [searchTerm, users])
 
-  const handleDownload = (pdfFileID) => {
-   //pdf logic here ; 
-  }
+ 
 
   const handleEmail = (email) => {
     alert(`Sending email to: ${email}`)
     // Add email functionality if needed
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-lg font-medium text-gray-700">Loading...</p>
-      </div>
-    )
-  }
+  const handleDownload = async (fileId) => {
+    if (!fileId) {
+        toast.error('Invalid file ID!');
+        return;
+    }
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-lg font-medium text-red-500">{error}</p>
-      </div>
-    )
-  }
+    try {
+        // Get the download URL from Appwrite
+        const fileUrl = getFileDownloadURL(fileId);
+        
+        // Open the file in a new tab
+        window.open(fileUrl, '_blank');
+        
+        // Or download it directly
+        const anchor = document.createElement('a');
+        anchor.href = fileUrl;
+        anchor.download = `document-${Date.now()}.pdf`;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+
+    } catch (error) {
+        console.error('Error downloading file:', error);
+        toast.error('Failed to download the file. Please try again.');
+    }
+};
+
 
   return (
     <>
@@ -93,7 +106,7 @@ export default function SearchClient() {
                 name={user.fullName}
                 id={user.$id}
                 profilePicture={user.passportImageUrl}
-                onDownload={() => handleDownload(user.pdfFileUrl)}
+                onDownload={() => handleDownload(user.pdfFileId)}
                 onEmail={() => handleEmail(user.email)}
               /></Link>
             ))}

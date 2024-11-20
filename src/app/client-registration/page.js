@@ -10,6 +10,8 @@ import { ID } from 'appwrite';
 import Navbar from '@/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { isUserLoggedIn } from '@/utils/appwriteAuth';
+import { Loader2 } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 
 const InputField = ({ label, id, type = 'text', placeholder, value, onChange , required = false}) => (
@@ -220,14 +222,6 @@ export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) =
       </View>
 
       {/* Vehicle Condition Diagram */}
-      <View style={styles.vehicleDiagram}>
-        <Text style={styles.sectionHeading}>Vehicle Condition</Text>
-        <Text style={styles.legend}>
-          Legend: B=BENT | BR=BROKEN | C=CUT | D=DENTED | P=PAINTED | FF=FOREIGN FLUID | 
-          G=GOUGED | M=MISSING | R=RUST | S=SCRATCHED | ST=STAINED | T=TORN
-        </Text>
-        {/* Vehicle diagram would go here */}
-      </View>
 
       {/* Images Section */}
       <View style={styles.section}>
@@ -273,7 +267,8 @@ export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) =
 
 export default function IntegratedCarRentalForm() {
 
-  const [isClient, setIsClient] = useState(false)
+  const [isClient, setIsClient] = useState(false);
+  const [isSubmitting , setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setIsClient(true)
@@ -307,7 +302,7 @@ export default function IntegratedCarRentalForm() {
     const checkUser = async () => {
       const status = await isUserLoggedIn();
       if (!status.success) {
-        alert("You need to be logged in first to use the app")
+        toast.error("You need to be logged in first to use the app")
         router.push("/signin"); // Redirect to login page if not logged in
       }
     };
@@ -408,7 +403,7 @@ export default function IntegratedCarRentalForm() {
   const missingFields = requiredFields.filter(field => !formData[field]?.trim());
   
   if (missingFields.length > 0) {
-    alert(`Please fill out the following fields: ${missingFields.join(', ')}`);
+    toast.error(`Please fill out the following fields: ${missingFields.join(', ')}`);
     return;
   }
 
@@ -418,7 +413,7 @@ export default function IntegratedCarRentalForm() {
 
     try {
 
-
+      setIsSubmitting(true);
       const pdfBlob = await handleGeneratePDF(formData, carImages, fuelImage, passportImage);
       const pdfFileId = await uploadFileToAppwrite(
           pdfBlob, 
@@ -475,10 +470,12 @@ export default function IntegratedCarRentalForm() {
             }
         );
 
-        alert('Form Submitted Successfully');
+        setIsSubmitting(false);
+        toast.success('Form Submitted Successfully');
         console.log('Document created successfully:', response);
+        
     } catch (error) {
-        console.error('Failed to submit form:', error);
+        toast.success('Failed to submit form:', error);
         alert('Error occurred while submitting the form: ' + error.message);
     }
 };
@@ -490,36 +487,36 @@ export default function IntegratedCarRentalForm() {
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Client Registration</h1>
       <Section title="Personal Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Full Name" id="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} required ={false}/>
-          <InputField label="Email" id="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required ={false}/>
-          <InputField label="Phone Number" id="phone" type="tel" placeholder="+1234567890" value={formData.phone} onChange={handleChange} required ={false}/>
-          <InputField label="Address" id="address" placeholder="123 Main St, City, Country" value={formData.address} onChange={handleChange} required ={false} />
-          <InputField label="Date of Birth" id="dob" type="date" value={formData.dob} onChange={handleChange} required ={false} />
+          <InputField label="Full Name" id="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} required ={true}/>
+          <InputField label="Email" id="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required ={true}/>
+          <InputField label="Phone Number" id="phone" type="tel" placeholder="+1234567890" value={formData.phone} onChange={handleChange} required ={true}/>
+          <InputField label="Address" id="address" placeholder="123 Main St, City, Country" value={formData.address} onChange={handleChange} required ={true} />
+          <InputField label="Date of Birth" id="dob" type="date" value={formData.dob} onChange={handleChange} required ={true} />
         </div>
       </Section>
 
       <Section title="Passport Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} required ={false}/>
-          <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange} required ={false}/>
+          <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} required ={true}/>
+          <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange} required ={true}/>
           {passportImage && (
              <div className='mt-2 '>
                 <img src={passportImage} alt="passport-image" className="w-32 h-32 object-cover" />
                 <span className="text-sm text-green-600">✓ Client Image uploaded</span>
              </div>
           )}
-          <InputField label="Issue Date" id="passportIssueDate" type="date" value={formData.passportIssueDate} onChange={handleChange} required ={false}/>
-          <InputField label="Expiry Date" id="passportExpiryDate" type="date" value={formData.passportExpiryDate} onChange={handleChange} required ={false}/>
+          <InputField label="Issue Date" id="passportIssueDate" type="date" value={formData.passportIssueDate} onChange={handleChange} required ={true}/>
+          <InputField label="Expiry Date" id="passportExpiryDate" type="date" value={formData.passportExpiryDate} onChange={handleChange} required ={true}/>
         </div>
       </Section>
 
       <Section title="Emirates ID & License Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Emirates ID" id="emiratesId" placeholder="784-1234-1234567-1" value={formData.emiratesId} onChange={handleChange} required ={false}/>
-          <InputField label="License Number" id="licenseNumber" placeholder="12345678" value={formData.licenseNumber} onChange={handleChange} required ={false}/>
+          <InputField label="Emirates ID" id="emiratesId" placeholder="784-1234-1234567-1" value={formData.emiratesId} onChange={handleChange} required ={true}/>
+          <InputField label="License Number" id="licenseNumber" placeholder="12345678" value={formData.licenseNumber} onChange={handleChange} required ={true}/>
           <InputField label="License Number 2 (optional)" id="licenseNumber2" placeholder="12345678" value={formData.licenseNumber2} onChange={handleChange} />
-          <InputField label="License Issue Date" id="licenseIssueDate" type="date" value={formData.licenseIssueDate} onChange={handleChange} required ={false}/>
-          <InputField label="License Expiry Date" id="licenseExpiryDate" type="date" value={formData.licenseExpiryDate} onChange={handleChange} required ={false}/>
+          <InputField label="License Issue Date" id="licenseIssueDate" type="date" value={formData.licenseIssueDate} onChange={handleChange} required ={true}/>
+          <InputField label="License Expiry Date" id="licenseExpiryDate" type="date" value={formData.licenseExpiryDate} onChange={handleChange} required ={true}/>
         </div>
       </Section>
 
@@ -581,8 +578,12 @@ export default function IntegratedCarRentalForm() {
           type="submit"
           className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300"
         >
-          Submit Registration
-        </button>
+          {isSubmitting ? (
+          <Loader2 className="animate-spin mr-2" size={20} />
+        ) : (
+          'Submit Form'
+        )}
+      </button>
       </div>
     </form>
     

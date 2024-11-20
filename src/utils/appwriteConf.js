@@ -134,7 +134,7 @@ export const getEvents = async () => {
         $id: document.$id, // Correct property name for document ID
         fullName: document.fullName,
         email: document.email,
-        pdfFileID: document.pdfFileID,
+        pdfFileId: document.pdfFileId,
         pdfFileUrl : storage.getFilePreview(
             process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
             document.pdfFileId
@@ -159,8 +159,6 @@ export const getEvents = async () => {
       console.error('No document ID provided');
       return null;
     }
-
-    
   
     try {
       // Fetch the document using the provided `id`
@@ -189,4 +187,14 @@ export const getEvents = async () => {
       return null;
     }
   };
+
+  export const getFileDownloadURL = ( fileId) => {
+    try {
+        const fileUrl = storage.getFileDownload(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, fileId);
+        return fileUrl;
+    } catch (error) {
+        console.error('Error getting file URL:', error);
+        throw error;
+    }
+};
 export { client, databases, storage };
