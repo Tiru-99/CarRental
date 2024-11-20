@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import { isUserLoggedIn } from "@/utils/appwriteAuth";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Home() 
 {
@@ -13,7 +14,7 @@ export default function Home()
     const checkUser = async () => {
       const status = await isUserLoggedIn();
       if (!status.success) {
-        alert("You need to be logged in first to use the app")
+        toast.error("You need to be logged in first to use the app")
         router.push("/signin"); // Redirect to login page if not logged in
       }
     };
