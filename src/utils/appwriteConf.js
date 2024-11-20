@@ -135,6 +135,10 @@ export const getEvents = async () => {
         fullName: document.fullName,
         email: document.email,
         pdfFileID: document.pdfFileID,
+        pdfFileUrl : storage.getFilePreview(
+            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+            document.pdfFileId
+        ),
         passportImageId:document.passportImageId,
         passportImageUrl: storage.getFilePreview(
         process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, // Bucket ID for your storage

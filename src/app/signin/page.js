@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { loginUser } from "../../utils/appwriteAuth"; // Import the loginUser function
-
+import { Loader2 } from "lucide-react"; // Import Loader2 icon from lucide-react or ensure it's the correct import
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // State for the loader
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -20,8 +20,6 @@ const SignIn = () => {
       [id]: value,
     }));
   };
-  
- 
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -33,22 +31,25 @@ const SignIn = () => {
       return;
     }
 
-    
+    setLoading(true); // Show loader
+    setMessage(""); // Clear previous messages
 
     try {
       // Call the loginUser function with the email and password
       const result = await loginUser(formData.email, formData.password);
 
       if (result.success) {
-        alert("You have successfully signed in ");
-        window.location.href = '/';
-        // Redirect to dashboard or another page (e.g., window.location.href = "/dashboard";)
+        alert("You have successfully signed in.");
+        window.location.href = "/";
+        // Redirect to dashboard or another page
       } else {
         setMessage(result.message); // Display error message from the API
       }
     } catch (error) {
       console.error("Error during sign-in:", error);
       setMessage("An unexpected error occurred.");
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
@@ -72,7 +73,7 @@ const SignIn = () => {
       {/* Right Section */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="mb-8 text-center md:mr-32">
+          <div className="mb-8 text-center">
             <img
               src="/images/logo.png" // Replace with your logo URL
               alt="Autobreeze Logo"
@@ -120,15 +121,27 @@ const SignIn = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={loading} // Disable button when loading
+              className={`w-full py-2 px-4 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                loading
+                  ? "bg-blue-300 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
             >
-              Sign In
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </div>
+              ) : (
+                "Sign in"
+              )}
             </button>
           </form>
 
           {/* Message Section */}
           {message && (
-            <div className="mt-4 text-center text-red-500">
+            <div className="mt-4 text-center text-sm text-red-600">
               <p>{message}</p>
             </div>
           )}

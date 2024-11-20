@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { registerUser } from '../../utils/appwriteAuth'
-
+import { registerUser } from '../../utils/appwriteAuth';
+import { Loader2 } from "lucide-react"; // Ensure this import is correct and lucide-react is installed
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,7 @@ const SignUp = () => {
   });
 
   const [message, setMessage] = useState(""); // To display success/error messages
+  const [loading, setLoading] = useState(false);
 
   // Update state when form inputs change
   const handleInputChange = (e) => {
@@ -22,45 +23,40 @@ const SignUp = () => {
     }));
   };
 
-  
   // Handle form submission
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Basic validation
     if (!formData.username || !formData.email || !formData.password) {
       setMessage("All fields are required!");
       return;
     }
 
+    setLoading(true); // Show loader
+    setMessage(""); // Clear previous messages
+
     try {
-        // Call the registerUser function with form data
-        const result = await registerUser(
-          formData.username,
-          formData.email,
-          formData.password
-        );
+      // Call the registerUser function with form data
+      const result = await registerUser(
+        formData.username,
+        formData.email,
+        formData.password
+      );
 
-        if (result.success) {
-          // Display success message
-          setFormData({ username: "", email: "", password: "" }); 
-          alert("Account Created Successfully");
-          window.location.href('/signin')
-
-        } else {
-          setMessage(result.message); // Display error message from API
-        }
-      } catch (error) {
-        console.error("Error during registration:", error);
-        setMessage("An unexpected error occurred.");
+      if (result.success) {
+        setFormData({ username: "", email: "", password: "" }); // Clear the form
+        alert("Account Created Successfully");
+        window.location.href = "/signin"; // Redirect to SignIn page
+      } else {
+        setMessage(result.message); // Display error message from API
       }
-
-   
-    console.log("Sign Up Data Submitted:", formData);
-
-    // Mock successful submission
-    setMessage("Account created successfully!");
-    setFormData({ username: "", email: "", password: "" }); // Clear the form
+    } catch (error) {
+      console.error("Error during registration:", error);
+      setMessage("An unexpected error occurred.");
+    } finally {
+      setLoading(false); // Hide loader
+    }
   };
 
   return (
@@ -148,9 +144,21 @@ const SignUp = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={loading} // Disable button when loading
+              className={`w-full py-2 px-4 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                loading
+                  ? "bg-blue-300 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
             >
-              Create Account
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing up...
+                </div>
+              ) : (
+                "Sign up"
+              )}
             </button>
           </form>
 

@@ -1,27 +1,29 @@
 "use client";
 import Link from "next/link";
-import { WavesIcon as Wave, Menu, X } from "lucide-react";
+import { WavesIcon as Wave, Menu, X, Loader2 } from "lucide-react"; // Added Loader2 for the spinner
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // For redirect after logout
 import { logoutUser } from "@/utils/appwriteAuth"; // Your logout function
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(false); // Track loading state
   const router = useRouter(); // To handle redirect after logout
 
   const handleUserLogout = async () => {
+    setLoading(true); // Start loading
     const result = await logoutUser(); // Call the logout function
 
     if (result.success) {
       // On success, redirect to the home page or login page
-      alert("Logging out successfully")
+      alert("Logging out successfully");
       router.push("/signin"); // or "/"
-      // Optionally show a success message or use a toast library
     } else {
       // Handle any logout errors (you could show an alert or a message)
       console.error("Logout failed:", result.message);
       alert(result.message || "Logout failed");
     }
+    setLoading(false); // Stop loading
   };
 
   return (
@@ -41,10 +43,22 @@ export default function Navbar() {
           </nav>
           <div className="hidden md:block">
             <button
-              onClick={handleUserLogout} // Handle logout on click
-              className="rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              onClick={handleUserLogout}
+              disabled={loading} // Disable button while loading
+              className={`flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                loading
+                  ? "bg-blue-300 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              Logout
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging out...
+                </>
+              ) : (
+                "Logout"
+              )}
             </button>
           </div>
           <div className="md:hidden">
@@ -62,23 +76,35 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-            <NavLink href="/" mobile>
+            <Link href="/" mobile>
               Home
-            </NavLink>
-            <NavLink href="/client" mobile>
+            </Link>
+            <Link href="/client" mobile>
               Client
-            </NavLink>
-            <NavLink href="/client-registration" mobile>
+            </Link>
+            <Link href="/client-registration" mobile>
               Add a Client
-            </NavLink>
+            </Link>
           </div>
           <div className="border-t border-gray-200 pb-3 pt-4">
             <div className="flex items-center px-5">
               <button
-                onClick={handleUserLogout} // Handle logout here as well
-                className="w-full rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                onClick={handleUserLogout}
+                disabled={loading} // Disable button while loading
+                className={`flex items-center justify-center w-full rounded-md px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  loading
+                    ? "bg-blue-300 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
               >
-                Logout
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging out...
+                  </>
+                ) : (
+                  "Logout"
+                )}
               </button>
             </div>
           </div>

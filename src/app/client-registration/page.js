@@ -1,6 +1,7 @@
 "use client"
 import React, { useState , useEffect} from 'react';
-import { PDFDownloadLink, Document, Page, View, Text, Image, StyleSheet,pdf } from '@react-pdf/renderer';
+import {  Document, Page, View, Text, Image, StyleSheet,pdf } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import ImageDrawForm from '../../components/ImageEditor';
 import {nanoid} from 'nanoid';
 import { databases } from '../../utils/appwriteConf';
@@ -10,7 +11,8 @@ import Navbar from '@/components/Navbar';
 import { useRouter } from 'next/navigation';
 import { isUserLoggedIn } from '@/utils/appwriteAuth';
 
-const InputField = ({ label, id, type = 'text', placeholder, value, onChange }) => (
+
+const InputField = ({ label, id, type = 'text', placeholder, value, onChange , required = false}) => (
   <div className="mb-4">
     <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
     <input
@@ -18,6 +20,7 @@ const InputField = ({ label, id, type = 'text', placeholder, value, onChange }) 
       id={id}
       placeholder={placeholder}
       value={value}
+      required={required}
       onChange={onChange}
       className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
     />
@@ -48,183 +51,234 @@ const Section = ({ title, children }) => (
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 30,
     fontFamily: 'Helvetica',
+    fontSize: 10,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    textDecoration: 'underline',
+    textTransform: 'uppercase',
   },
   section: {
     marginBottom: 15,
-    borderBottom: '1px solid #000',
+    borderBottom: '1px solid #ccc',
     paddingBottom: 10,
   },
   sectionHeading: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 8,
-    textDecoration: 'underline',
+    backgroundColor: '#f5f5f5',
+    padding: 4,
   },
   row: {
     flexDirection: 'row',
-    marginBottom: 6,
+    marginBottom: 4,
+    alignItems: 'center',
   },
   label: {
     width: '30%',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
   },
   value: {
     width: '70%',
-    fontSize: 12,
-    textAlign: 'left',
+    fontSize: 10,
   },
-  imageContainer: {
+  imageGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
     marginTop: 10,
   },
+  imageContainer: {
+    width: '45%',
+  },
   imageLabel: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
     marginBottom: 4,
   },
   image: {
-    width: 200,
+    width: '100%',
     height: 120,
-    marginBottom: 10,
-  }
-});
+    objectFit: 'cover',
+    border: '1px solid #ccc',
+  },
+  vehicleDiagram: {
+    marginTop: 10,
+    border: '1px solid #ccc',
+    padding: 10,
+  },
+  legend: {
+    fontSize: 8,
+    marginTop: 5,
+  },
+  signatureSection: {
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  signatureBox: {
+    width: '45%',
+    borderTop: '1px solid #000',
+    paddingTop: 5,
+    fontSize: 8,
+  },
+})
 
-// PDF Document Component
-const PDFDocument = ({ formData, carImages, fuelImage , passportImage}) => (
+export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) => (
   <Document>
-  <Page size="A4" style={styles.page}>
-    <Text style={styles.title}>Car Rental Registration Form</Text>
+    <Page size="A4" style={styles.page}>
+      <Text style={styles.title}>Vehicle Rental Agreement</Text>
 
-    {/* Personal Information Section */}
-    <View style={styles.section}>
-      <Text style={styles.sectionHeading}>Personal Information</Text>
-      <View style={styles.row}>
-        <Text style={styles.label}>Full Name:</Text>
-        <Text style={styles.value}>{formData.fullName}</Text>
+      {/* Personal Information */}
+      <View style={styles.section}>
+        <Text style={styles.sectionHeading}>Personal Information</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>Full Name:</Text>
+          <Text style={styles.value}>{formData.fullName}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Email:</Text>
+          <Text style={styles.value}>{formData.email}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Phone:</Text>
+          <Text style={styles.value}>{formData.phone}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Address:</Text>
+          <Text style={styles.value}>{formData.address}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Date of Birth:</Text>
+          <Text style={styles.value}>{formData.dob}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Passport ID:</Text>
+          <Text style={styles.value}>{formData.passportId}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Emirates ID:</Text>
+          <Text style={styles.value}>{formData.emiratesId}</Text>
+        </View>
       </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>{formData.email}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Phone:</Text>
-        <Text style={styles.value}>{formData.phone}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Address:</Text>
-        <Text style={styles.value}>{formData.address}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Date of Birth:</Text>
-        <Text style={styles.value}>{formData.dob}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Passport ID:</Text>
-        <Text style={styles.value}>{formData.passportId}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Emirates ID:</Text>
-        <Text style={styles.value}>{formData.emiratesId}</Text>
-      </View>
-      {/* <View style={styles.section}>
-      <Text style={styles.sectionHeading}>Passport Image</Text> */}
-      <View style={styles.imageContainer}>
-        {passportImage && (
-          <View>
-            <Text style={styles.imageLabel}>Passport Image</Text>
-            <Image source={passportImage} style={styles.image} />
-          </View>
-        )}
-      </View>
-    </View>
-   
 
-    {/* License Information Section */}
-    <View style={styles.section}>
-      <Text style={styles.sectionHeading}>License Information</Text>
-      <View style={styles.row}>
-        <Text style={styles.label}>License Number:</Text>
-        <Text style={styles.value}>{formData.licenseNumber}</Text>
+      {/* License Information */}
+      <View style={styles.section}>
+        <Text style={styles.sectionHeading}>License Information</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>License Number:</Text>
+          <Text style={styles.value}>{formData.licenseNumber}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Secondary License:</Text>
+          <Text style={styles.value}>{formData.licenseNumber2}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Issue Date:</Text>
+          <Text style={styles.value}>{formData.licenseIssueDate}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Expiry Date:</Text>
+          <Text style={styles.value}>{formData.licenseExpiryDate}</Text>
+        </View>
       </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Secondary License Number:</Text>
-        <Text style={styles.value}>{formData.licenseNumber2}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Issue Date:</Text>
-        <Text style={styles.value}>{formData.licenseIssueDate}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Expiry Date:</Text>
-        <Text style={styles.value}>{formData.licenseExpiryDate}</Text>
-      </View>
-    </View>
 
-    {/* Car Details Section */}
-    <View style={styles.section}>
-      <Text style={styles.sectionHeading}>Car Information</Text>
-      <View style={styles.row}>
-        <Text style={styles.label}>Car Details:</Text>
-        <Text style={styles.value}>{formData.carInfo}</Text>
+      {/* Vehicle Information */}
+      <View style={styles.section}>
+        <Text style={styles.sectionHeading}>Vehicle Information</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>Car Details:</Text>
+          <Text style={styles.value}>{formData.carInfo}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Fuel Type:</Text>
+          <Text style={styles.value}>{formData.carFuel}</Text>
+        </View>
       </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Fuel Type:</Text>
-        <Text style={styles.value}>{formData.carFuel}</Text>
-      </View>
-    </View>
 
-    {/* Rental Details Section */}
-    <View style={styles.section}>
-      <Text style={styles.sectionHeading}>Rental Information</Text>
-      <View style={styles.row}>
-        <Text style={styles.label}>Charges:</Text>
-        <Text style={styles.value}>{formData.rentCharges}</Text>
+      {/* Rental Information */}
+      <View style={styles.section}>
+        <Text style={styles.sectionHeading}>Rental Information</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>Charges:</Text>
+          <Text style={styles.value}>{formData.rentCharges}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Rental Date:</Text>
+          <Text style={styles.value}>{formData.rentalDate}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Location:</Text>
+          <Text style={styles.value}>{formData.rentalLocation}</Text>
+        </View>
       </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Rental Date:</Text>
-        <Text style={styles.value}>{formData.rentalDate}</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Location:</Text>
-        <Text style={styles.value}>{formData.rentalLocation}</Text>
-      </View>
-    </View>
 
-    {/* Images Section */}
-    <View style={styles.section}>
-      <Text style={styles.sectionHeading}>Car Images</Text>
-      <View style={styles.imageContainer}>
-        {Object.entries(carImages).map(([key, value]) => (
-          value && (
-            <View key={key}>
-              <Text style={styles.imageLabel}>{key}:</Text>
-              <Image source={value} style={styles.image} />
+      {/* Vehicle Condition Diagram */}
+      <View style={styles.vehicleDiagram}>
+        <Text style={styles.sectionHeading}>Vehicle Condition</Text>
+        <Text style={styles.legend}>
+          Legend: B=BENT | BR=BROKEN | C=CUT | D=DENTED | P=PAINTED | FF=FOREIGN FLUID | 
+          G=GOUGED | M=MISSING | R=RUST | S=SCRATCHED | ST=STAINED | T=TORN
+        </Text>
+        {/* Vehicle diagram would go here */}
+      </View>
+
+      {/* Images Section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionHeading}>Documentation</Text>
+        <View style={styles.imageGrid}>
+          {passportImage && (
+            <View style={styles.imageContainer}>
+              <Text style={styles.imageLabel}>Passport</Text>
+              <Image src={passportImage} style={styles.image} />
             </View>
-          )
-        ))}
-        {fuelImage && (
-          <View>
-            <Text style={styles.imageLabel}>Fuel Image:</Text>
-            <Image source={fuelImage} style={styles.image} />
-          </View>
-        )}
+          )}
+          {Object.entries(carImages).map(([key, value]) => (
+            value && (
+              <View key={key} style={styles.imageContainer}>
+                <Text style={styles.imageLabel}>{key}</Text>
+                <Image src={value} style={styles.image} />
+              </View>
+            )
+          ))}
+          {fuelImage && (
+            <View style={styles.imageContainer}>
+              <Text style={styles.imageLabel}>Fuel Status</Text>
+              <Image src={fuelImage} style={styles.image} />
+            </View>
+          )}
+        </View>
       </View>
-    </View>
-  </Page>
-</Document>
-);
 
+      {/* Signatures */}
+      <View style={styles.signatureSection}>
+        <View style={styles.signatureBox}>
+          <Text>Customer Signature</Text>
+          <Text>Date: _____________</Text>
+        </View>
+        <View style={styles.signatureBox}>
+          <Text>Agent Signature</Text>
+          <Text>Date: _____________</Text>
+        </View>
+      </View>
+    </Page>
+  </Document>
+)
 
 export default function IntegratedCarRentalForm() {
+
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, []);
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -234,7 +288,6 @@ export default function IntegratedCarRentalForm() {
     passportId: '',
     passportIssueDate:'',
     passportExpiryDate:'',
-    
     emiratesId: '',
     licenseNumber: '',
     licenseNumber2:'',
@@ -337,9 +390,29 @@ export default function IntegratedCarRentalForm() {
   const dbId =process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID ;
   const collectionId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID;
   const buckedId = process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID;
-  console.log("This is my bucked Id ", buckedId);
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+     // Collect all required fields
+  const requiredFields = [
+    'fullName', 'email', 'phone', 'address', 'dob', 'passportId',
+    'passportIssueDate', 'passportExpiryDate', 'emiratesId',
+    'licenseNumber', 'licenseIssueDate', 'licenseExpiryDate', 
+    'carInfo', 'carFuel', 'rentCharges', 'rentalDate', 'rentalLocation',
+  ];
+
+  // Check if any required field is empty
+  const missingFields = requiredFields.filter(field => !formData[field]?.trim());
+  
+  if (missingFields.length > 0) {
+    alert(`Please fill out the following fields: ${missingFields.join(', ')}`);
+    return;
+  }
+
+
     const bucketId = buckedId;
     const uploadedImages = [];
 
@@ -417,36 +490,36 @@ export default function IntegratedCarRentalForm() {
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Client Registration</h1>
       <Section title="Personal Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Full Name" id="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} required/>
-          <InputField label="Email" id="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required/>
-          <InputField label="Phone Number" id="phone" type="tel" placeholder="+1234567890" value={formData.phone} onChange={handleChange} required/>
-          <InputField label="Address" id="address" placeholder="123 Main St, City, Country" value={formData.address} onChange={handleChange} required />
-          <InputField label="Date of Birth" id="dob" type="date" value={formData.dob} onChange={handleChange} />
+          <InputField label="Full Name" id="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} required ={false}/>
+          <InputField label="Email" id="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required ={false}/>
+          <InputField label="Phone Number" id="phone" type="tel" placeholder="+1234567890" value={formData.phone} onChange={handleChange} required ={false}/>
+          <InputField label="Address" id="address" placeholder="123 Main St, City, Country" value={formData.address} onChange={handleChange} required ={false} />
+          <InputField label="Date of Birth" id="dob" type="date" value={formData.dob} onChange={handleChange} required ={false} />
         </div>
       </Section>
 
       <Section title="Passport Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} required/>
-          <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange} required/>
+          <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} required ={false}/>
+          <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange} required ={false}/>
           {passportImage && (
              <div className='mt-2 '>
                 <img src={passportImage} alt="passport-image" className="w-32 h-32 object-cover" />
-                <span className="text-sm text-green-600">✓ Passport Image uploaded</span>
+                <span className="text-sm text-green-600">✓ Client Image uploaded</span>
              </div>
           )}
-          <InputField label="Issue Date" id="passportIssueDate" type="date" value={formData.passportIssueDate} onChange={handleChange} required/>
-          <InputField label="Expiry Date" id="passportExpiryDate" type="date" value={formData.passportExpiryDate} onChange={handleChange} required/>
+          <InputField label="Issue Date" id="passportIssueDate" type="date" value={formData.passportIssueDate} onChange={handleChange} required ={false}/>
+          <InputField label="Expiry Date" id="passportExpiryDate" type="date" value={formData.passportExpiryDate} onChange={handleChange} required ={false}/>
         </div>
       </Section>
 
       <Section title="Emirates ID & License Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Emirates ID" id="emiratesId" placeholder="784-1234-1234567-1" value={formData.emiratesId} onChange={handleChange} required/>
-          <InputField label="License Number" id="licenseNumber" placeholder="12345678" value={formData.licenseNumber} onChange={handleChange} required/>
-          <InputField label="License Number 2 (optional)" id="licenseNumber2" placeholder="12345678" value={formData.licenseNumber2} onChange={handleChange} required/>
-          <InputField label="License Issue Date" id="licenseIssueDate" type="date" value={formData.licenseIssueDate} onChange={handleChange} required/>
-          <InputField label="License Expiry Date" id="licenseExpiryDate" type="date" value={formData.licenseExpiryDate} onChange={handleChange} required/>
+          <InputField label="Emirates ID" id="emiratesId" placeholder="784-1234-1234567-1" value={formData.emiratesId} onChange={handleChange} required ={false}/>
+          <InputField label="License Number" id="licenseNumber" placeholder="12345678" value={formData.licenseNumber} onChange={handleChange} required ={false}/>
+          <InputField label="License Number 2 (optional)" id="licenseNumber2" placeholder="12345678" value={formData.licenseNumber2} onChange={handleChange} />
+          <InputField label="License Issue Date" id="licenseIssueDate" type="date" value={formData.licenseIssueDate} onChange={handleChange} required ={false}/>
+          <InputField label="License Expiry Date" id="licenseExpiryDate" type="date" value={formData.licenseExpiryDate} onChange={handleChange} required ={false}/>
         </div>
       </Section>
 
@@ -464,10 +537,10 @@ export default function IntegratedCarRentalForm() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               ></textarea>
             </div>
-            <InputField label="Car Fuel" id="carFuel" placeholder="e.g., Petrol, Diesel, Electric" value={formData.carFuel} onChange={handleChange} required/>
-            <InputField label="Car Rent Charges" id="rentCharges" type="number" placeholder="Enter daily rate" value={formData.rentCharges} onChange={handleChange} required/>
-            <InputField label="Trip Start Date" id="rentalDate" type="date" value={formData.rentalDate} onChange={handleChange} />
-            <InputField label="Rental Location" id="rentalLocation" placeholder="Enter pickup location" value={formData.rentalLocation} onChange={handleChange} required/>
+            <InputField label="Car Fuel" id="carFuel" placeholder="e.g., Petrol, Diesel, Electric" value={formData.carFuel} onChange={handleChange} required ={false}/>
+            <InputField label="Car Rent Charges" id="rentCharges" type="number" placeholder="Enter daily rate" value={formData.rentCharges} onChange={handleChange} required ={false}/>
+            <InputField label="Trip Start Date" id="rentalDate" type="date" value={formData.rentalDate} onChange={handleChange} required ={false}/>
+            <InputField label="Rental Location" id="rentalLocation" placeholder="Enter pickup location" value={formData.rentalLocation} onChange={handleChange} required ={false}/>
           </div>
           
           <div>
@@ -490,7 +563,7 @@ export default function IntegratedCarRentalForm() {
           </div>
           
           <FileInput label="Fuel Image" id="fuelImage"
-          onChange={handleFuelImageChange} required/>
+          onChange={handleFuelImageChange} required ={true}/>
 
           {fuelImage && (
             <div className="mt-2">
@@ -513,15 +586,25 @@ export default function IntegratedCarRentalForm() {
       </div>
     </form>
     
-        <div className="mt-6 text-center">
-          <PDFDownloadLink
-            document={<PDFDocument formData={formData} carImages={carImages} fuelImage={fuelImage} passportImage={passportImage} />}
-            fileName={`${formData.fullName}.pdf`}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-          >
-            {({ loading }) => (loading ? 'Generating PDF...' : 'Download PDF')}
-          </PDFDownloadLink>
-        </div>     
+    {isClient && (
+  <div className="mt-6 text-center">
+    <PDFDownloadLink
+      document={
+        <PDFDocument
+          formData={formData}
+          carImages={carImages}
+          fuelImage={fuelImage}
+          passportImage={passportImage}
+        />
+      }
+      fileName={`${formData.fullName}.pdf`}
+      className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+    >
+      {({ loading }) => (loading ? 'Generating PDF...' : 'Download PDF')}
+    </PDFDownloadLink>
+  </div>
+)}
+  
     </div>
   );
 }

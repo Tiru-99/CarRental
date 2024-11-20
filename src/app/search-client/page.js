@@ -43,8 +43,7 @@ export default function SearchClient() {
   }, [searchTerm, users])
 
   const handleDownload = (pdfFileID) => {
-    alert(`Downloading PDF with ID: ${pdfFileID}`)
-    // Add functionality to download PDF if needed
+   //pdf logic here ; 
   }
 
   const handleEmail = (email) => {
@@ -94,7 +93,7 @@ export default function SearchClient() {
                 name={user.fullName}
                 id={user.$id}
                 profilePicture={user.passportImageUrl}
-                onDownload={() => handleDownload(user.pdfFileID)}
+                onDownload={() => handleDownload(user.pdfFileUrl)}
                 onEmail={() => handleEmail(user.email)}
               /></Link>
             ))}
