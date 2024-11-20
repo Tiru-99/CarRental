@@ -15,7 +15,7 @@ export default function Home()
       const status = await isUserLoggedIn();
       if (!status.success) {
         toast.error("You need to be logged in first to use the app")
-        router.push("/signin"); // Redirect to login page if not logged in
+        router.push("/signin"); 
       }
     };
 

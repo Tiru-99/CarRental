@@ -1,6 +1,6 @@
 "use client"
 import React, { useState , useEffect} from 'react';
-import {  Document, Page, View, Text, Image, StyleSheet,pdf } from '@react-pdf/renderer';
+import {  Document, Page, View, Text, Image, StyleSheet, pdf } from '@react-pdf/renderer';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ImageDrawForm from '../../components/ImageEditor';
 import {nanoid} from 'nanoid';
@@ -12,6 +12,9 @@ import { useRouter } from 'next/navigation';
 import { isUserLoggedIn } from '@/utils/appwriteAuth';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import ImageEditor2 from '@/components/ImageEditor2';
+import { CarSelection } from '@/components/CarSelection';
+
 
 
 const InputField = ({ label, id, type = 'text', placeholder, value, onChange , required = false}) => (
@@ -43,7 +46,6 @@ const FileInput = ({ label, id , onChange }) => (
 );
 
 
-
 const Section = ({ title, children }) => (
   <div className="mb-8">
     <h2 className="text-xl font-semibold mb-4">{title}</h2>
@@ -52,10 +54,18 @@ const Section = ({ title, children }) => (
 );
 
 const styles = StyleSheet.create({
+  // Existing styles remain unchanged
   page: {
     padding: 30,
     fontFamily: 'Helvetica',
     fontSize: 10,
+  },
+  headerImage: { 
+    width: '60%',
+    height: 80,
+    marginBottom: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   title: {
     fontSize: 24,
@@ -130,11 +140,44 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     fontSize: 8,
   },
-})
+  // Additional styles for credit card authorization
+  creditCardHeader: {
+    backgroundColor: '#f5f5f5',
+    padding: 8,
+    marginBottom: 10,
+  },
+  creditCardHeaderText: {
+    color: 'black',
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  creditCardRow: {
+    flexDirection: 'row',
+    marginBottom: 8,
+    alignItems: 'center',
+    gap: 4,
+  },
+  creditCardLabel: {
+    fontSize: 10,
+    marginRight: 4,
+  },
+  creditCardValue: {
+    fontSize: 10,
+    flex: 1,
+    marginRight: 2,
+  },
+});
+const companyLogo = '/images/logo.png';
 
-export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) => (
+export const PDFDocument = ({ formData, carImages, fuelImage, passportImage , companyLogo , carViewImages}) => (
   <Document>
     <Page size="A4" style={styles.page}>
+
+    {companyLogo && (
+        <Image src={companyLogo} style={styles.headerImage} />
+      )}
+
       <Text style={styles.title}>Vehicle Rental Agreement</Text>
 
       {/* Personal Information */}
@@ -170,6 +213,47 @@ export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) =
         </View>
       </View>
 
+    <View style={styles.section}>
+    <View style={styles.creditCardHeader}>
+      <Text style={styles.creditCardHeaderText}>CREDIT CARD AUTHORISATION</Text>
+    </View>
+
+    <View style={styles.creditCardRow}>
+      <Text style={styles.creditCardLabel}>I</Text>
+      <Text style={styles.creditCardValue}>{formData.fullName}</Text>
+      <Text style={styles.creditCardLabel}>the undersigned with the following</Text>
+    </View>
+
+    <View style={styles.creditCardRow}>
+      <Text style={styles.creditCardLabel}>Passport Number</Text>
+      <Text style={styles.creditCardValue}>{formData.passportId}</Text>
+      <Text style={styles.creditCardLabel}>National ID</Text>
+      <Text style={styles.creditCardValue}>{formData.nationalId}</Text>
+    </View>
+
+    <View style={styles.creditCardRow}>
+      <Text style={styles.creditCardLabel}>
+        I hereby authorise reserve car rental to debit my credit card for the changes as per below
+      </Text>
+    </View>
+
+    <View style={styles.creditCardRow}>
+      <Text style={styles.creditCardLabel}>Credit Card No.</Text>
+      <Text style={styles.creditCardValue}>{formData.creditCardNo}</Text>
+      <Text style={styles.creditCardLabel}>Expiry Date</Text>
+      <Text style={styles.creditCardValue}>{formData.creditCardExpiryDate}</Text>
+      <Text style={styles.creditCardLabel}>Amount Dhs</Text>
+      <Text style={styles.creditCardValue}></Text>
+    </View>
+
+    <View style={styles.creditCardRow}>
+      <Text style={styles.creditCardLabel}>Name of the card holder</Text>
+      <Text style={styles.creditCardValue}>{formData.holderCreditCard}</Text>
+      <Text style={styles.creditCardLabel}>Signature</Text>
+      <Text style={styles.creditCardValue}></Text>
+    </View>
+  </View>
+
       {/* License Information */}
       <View style={styles.section}>
         <Text style={styles.sectionHeading}>License Information</Text>
@@ -195,11 +279,15 @@ export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) =
       <View style={styles.section}>
         <Text style={styles.sectionHeading}>Vehicle Information</Text>
         <View style={styles.row}>
-          <Text style={styles.label}>Car Details:</Text>
+          <Text style={styles.label}>Car Info:</Text>
           <Text style={styles.value}>{formData.carInfo}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>Fuel Type:</Text>
+          <Text style={styles.label}>Car Model</Text>
+          <Text style={styles.value}>{formData.carModel}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Car Fuel:</Text>
           <Text style={styles.value}>{formData.carFuel}</Text>
         </View>
       </View>
@@ -221,34 +309,66 @@ export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) =
         </View>
       </View>
 
-      {/* Vehicle Condition Diagram */}
-
-      {/* Images Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionHeading}>Documentation</Text>
-        <View style={styles.imageGrid}>
-          {passportImage && (
-            <View style={styles.imageContainer}>
-              <Text style={styles.imageLabel}>Passport</Text>
-              <Image src={passportImage} style={styles.image} />
-            </View>
-          )}
-          {Object.entries(carImages).map(([key, value]) => (
-            value && (
-              <View key={key} style={styles.imageContainer}>
-                <Text style={styles.imageLabel}>{key}</Text>
-                <Image src={value} style={styles.image} />
-              </View>
-            )
-          ))}
-          {fuelImage && (
-            <View style={styles.imageContainer}>
-              <Text style={styles.imageLabel}>Fuel Status</Text>
-              <Image src={fuelImage} style={styles.image} />
-            </View>
-          )}
+        {/* Payment Information  */}
+        <View style={styles.section}>
+          <Text style={styles.sectionHeading}>Payment Information</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>Rate Per Day</Text>
+          <Text style={styles.value}>{formData.rentCharges}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Daily KM Limit</Text>
+          <Text style={styles.value}>{formData.dailyKmValue}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Car Fuel:</Text>
+          <Text style={styles.value}>{formData.carFuel}</Text>
         </View>
       </View>
+
+      {/* Vehicle Condition Diagram */}
+
+      {/* Car View Images Section */}
+      
+
+
+{/* Images Section */}
+<View style={styles.section}>
+  <Text style={styles.sectionHeading}>Documentation</Text>
+  <View style={styles.imageGrid}>
+    {passportImage && (
+      <View style={styles.imageContainer}>
+        <Text style={styles.imageLabel}>Passport</Text>
+        <Image src={passportImage} style={styles.image} />
+      </View>
+    )}
+    {Object.entries(carImages).map(([key, value]) => (
+      value && (
+        <View key={key} style={styles.imageContainer}>
+          <Text style={styles.imageLabel}>{key}</Text>
+          <Image src={value} style={styles.image} />
+        </View>
+      )
+    ))}
+    {fuelImage && (
+      <View style={styles.imageContainer}>
+        <Text style={styles.imageLabel}>Fuel Status</Text>
+        <Image src={fuelImage} style={styles.image} />
+      </View>
+    )}
+    {Object.entries(carViewImages).map(([key, value]) => (
+      value && (
+        <View key={key} style={styles.imageContainer}>
+          <Text style={styles.imageLabel}>{key}</Text>
+          <Image src={value} style={styles.image} />
+        </View>
+      )
+    ))}
+  
+  </View>
+</View>
+
+
 
       {/* Signatures */}
       <View style={styles.signatureSection}>
@@ -266,9 +386,11 @@ export const PDFDocument = ({ formData, carImages, fuelImage, passportImage }) =
 )
 
 export default function IntegratedCarRentalForm() {
-
+  const[showDownloadPdfButton , setShowDownloadPdfButton] = useState(false)
   const [isClient, setIsClient] = useState(false);
   const [isSubmitting , setIsSubmitting] = useState(false);
+  
+ 
 
   useEffect(() => {
     setIsClient(true)
@@ -288,11 +410,20 @@ export default function IntegratedCarRentalForm() {
     licenseNumber2:'',
     licenseIssueDate: '',
     licenseExpiryDate: '',
+    emiratesId2:'',
+    licenseIssueDate2:'',
+    licenseExpiryDate2:'',
+    creditCardNo:'',
+    holderCreditCard:'',
+    nationalId:'',
+    creditCardExpiryDate:'',
     carInfo: '',
     carFuel: '',
+    carModel:'',
     rentCharges: '',
     rentalDate: '',
     rentalLocation: '',
+    dailyKmValue:''
   });
 
   const uniqueId = nanoid();
@@ -310,6 +441,23 @@ export default function IntegratedCarRentalForm() {
     checkUser();
   },[router])
 
+  const frontViewUrl = "/images/front-car-image.jpg"
+  const rearViewUrl = "/images/rear-view-image.jpg"
+
+  const [carViewImages, setCarViewImages] = useState({
+    frontView: null,
+    rearView: null,
+  })
+  console.log(carViewImages)
+
+  const handleSaveFrontView = (imageData) => {
+    setCarViewImages(prev => ({ ...prev, frontView: imageData }))
+  }
+
+  const handleSaveRearView = (imageData) => {
+    setCarViewImages(prev => ({ ...prev, rearView: imageData }))
+  }
+
   const[carImages , setCarImages] = useState({
     angle1 : null , 
     angle2 : null , 
@@ -317,6 +465,7 @@ export default function IntegratedCarRentalForm() {
     angle4 : null , 
     angle5 : null
   }); 
+
 
   const[fuelImage , setFuelImage] = useState(null);
   // const[pdfblob ,setPdfBlob] = useState(null);
@@ -360,9 +509,8 @@ export default function IntegratedCarRentalForm() {
     }
   };
 
-  
 
- const handleGeneratePDF = async(formData , carImages , fuelImage , passportImage) => {
+ const handleGeneratePDF = async(formData , carImages , fuelImage , passportImage, carViewImages) => {
   try {
     const instance = pdf(
         <PDFDocument 
@@ -370,6 +518,7 @@ export default function IntegratedCarRentalForm() {
             carImages={carImages} 
             fuelImage={fuelImage} 
             passportImage={passportImage} 
+            carViewImages={carViewImages}
         />
     );
     const blob = await instance.toBlob();
@@ -410,11 +559,12 @@ export default function IntegratedCarRentalForm() {
 
     const bucketId = buckedId;
     const uploadedImages = [];
+    const carViewUploadedImages = [] ; 
 
     try {
 
       setIsSubmitting(true);
-      const pdfBlob = await handleGeneratePDF(formData, carImages, fuelImage, passportImage);
+      const pdfBlob = await handleGeneratePDF(formData, carImages, fuelImage, passportImage , carViewImages);
       const pdfFileId = await uploadFileToAppwrite(
           pdfBlob, 
           bucketId, 
@@ -430,6 +580,14 @@ export default function IntegratedCarRentalForm() {
             }
         }
 
+        for(const[key , image] of Object.entries(carViewImages)){
+          if(image){
+            const carViewFileId = await uploadFileToAppwrite(image , bucketId);
+            carViewUploadedImages.push(carViewFileId)
+          }
+        }
+
+       
         // Upload passport image
         const passportImageId = passportImage
             ? await uploadFileToAppwrite(passportImage, bucketId)
@@ -451,19 +609,29 @@ export default function IntegratedCarRentalForm() {
                 email: formData?.email || '',
                 dob : formData?.dob || '',
                 carInfo : formData?.carInfo || '',
+                carModel : formData?.carModel || '',
                 passportId : formData?.passportId || '',
                 passportIssueDate: formData?.passportIssueDate || '',
                 passportExpiryDate : formData?.passportExpiryDate || '',
                 emiratesId : formData?.emiratesId || '',
+                emiratesId2 : formData?.emiratesId2|| '',
+                creditCardNo:formData?.creditCardNo||'',
+                creditCardExpiryDate:formData?.creditCardExpiryDate||'',
+                nationalId:formData?.nationalId||'',
+                holderCreditCard:formData?.holderCreditCard ||'',
                 licenseNumber : formData?.licenseNumber || '',
                 licenseNumber2 : formData?.licenseNumber2 || '',
                 licenseExpiryDate : formData?.licenseExpiryDate || '',
+                licenseExpiryDate2 : formData?.licenseExpiryDate2||'',
                 licenseIssueDate : formData?.licenseIssueDate || '',
+                licenseIssueDate2 : formData?.licenseIssueDate2 || '',
+                dailyKmValue:formData?.dailyKmValue || '',
                 phone: formData?.phone || '',
                 rentalDate : formData?.rentalDate || '',
                 rentCharges : formData?.rentCharges || '',
                 address: formData?.address || '',
                 carImageIds: uploadedImages,
+                carViewImages: carViewUploadedImages,
                 passportImageId: passportImageId || '',
                 fuelImageId: fuelImageId || '',
                 pdfFileId : pdfFileId,
@@ -471,14 +639,19 @@ export default function IntegratedCarRentalForm() {
         );
 
         setIsSubmitting(false);
+        setShowDownloadPdfButton(true);
+        
         toast.success('Form Submitted Successfully');
+        
         console.log('Document created successfully:', response);
         
     } catch (error) {
-        toast.success('Failed to submit form:', error);
+        toast.error('Failed to submit form:', error);
         alert('Error occurred while submitting the form: ' + error.message);
     }
 };
+
+
 
   return (
     <div>
@@ -487,17 +660,17 @@ export default function IntegratedCarRentalForm() {
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">Client Registration</h1>
       <Section title="Personal Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Full Name" id="fullName" placeholder="John Doe" value={formData.fullName} onChange={handleChange} required ={true}/>
-          <InputField label="Email" id="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required ={true}/>
-          <InputField label="Phone Number" id="phone" type="tel" placeholder="+1234567890" value={formData.phone} onChange={handleChange} required ={true}/>
-          <InputField label="Address" id="address" placeholder="123 Main St, City, Country" value={formData.address} onChange={handleChange} required ={true} />
+          <InputField label="Full Name" id="fullName" placeholder="--" value={formData.fullName} onChange={handleChange} required ={true}/>
+          <InputField label="Email" id="email" type="email" placeholder="--" value={formData.email} onChange={handleChange} required ={true}/>
+          <InputField label="Phone Number" id="phone" type="tel" placeholder="--" value={formData.phone} onChange={handleChange} required ={true}/>
+          <InputField label="Address" id="address" placeholder="--" value={formData.address} onChange={handleChange} required ={true} />
           <InputField label="Date of Birth" id="dob" type="date" value={formData.dob} onChange={handleChange} required ={true} />
         </div>
       </Section>
 
       <Section title="Passport Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Passport ID" id="passportId" placeholder="AB1234567" value={formData.passportId} onChange={handleChange} required ={true}/>
+          <InputField label="Passport ID" id="passportId" placeholder="--" value={formData.passportId} onChange={handleChange} required ={true}/>
           <FileInput label="Client Photo" id="passportPhoto" onChange={handlePassportImageChange} required ={true}/>
           {passportImage && (
              <div className='mt-2 '>
@@ -511,14 +684,64 @@ export default function IntegratedCarRentalForm() {
       </Section>
 
       <Section title="Emirates ID & License Information">
+      <p className='font-bold mb-2'>Driver 1 </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Emirates ID" id="emiratesId" placeholder="784-1234-1234567-1" value={formData.emiratesId} onChange={handleChange} required ={true}/>
-          <InputField label="License Number" id="licenseNumber" placeholder="12345678" value={formData.licenseNumber} onChange={handleChange} required ={true}/>
-          <InputField label="License Number 2 (optional)" id="licenseNumber2" placeholder="12345678" value={formData.licenseNumber2} onChange={handleChange} />
+          <InputField label="Emirates ID" id="emiratesId" placeholder="--" value={formData.emiratesId} onChange={handleChange} required ={true}/>
+          <InputField label="License Number" id="licenseNumber" placeholder="--" value={formData.licenseNumber} onChange={handleChange} required ={true}/>
           <InputField label="License Issue Date" id="licenseIssueDate" type="date" value={formData.licenseIssueDate} onChange={handleChange} required ={true}/>
           <InputField label="License Expiry Date" id="licenseExpiryDate" type="date" value={formData.licenseExpiryDate} onChange={handleChange} required ={true}/>
         </div>
+
+      <p className='font-bold mb-2 '>Driver 2 (optional)</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InputField label="Emirates ID" placeholder="--" id="emiratesId2" value={formData.emiratesId2} onChange={handleChange} required={false}/>
+            <InputField label="License Number" id="licenseNumber2" placeholder="--" value={formData.licenseNumber2} onChange={handleChange}  required={false}/>
+            <InputField label="License Issue Date" id="licenseIssueDate2" type="date" value={formData.licenseIssueDate2} onChange={handleChange}  required={false}/>
+            <InputField label="License Expiry Date" id="licenseExpiryDate2" type="date" value={formData.licenseExpiryDate2} onChange={handleChange}  required={false}/>
+        </div>
+
+
       </Section>
+
+      <Section title="Credit Card Details">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InputField
+              label="Credit Card No"
+              id="creditCardNo"
+              placeholder="Enter your credit card number"
+              value={formData.creditCardNo}
+              onChange={handleChange}
+              required={true}
+            />
+            <InputField
+              label="Name of the Card Holder"
+              id="holderCreditCard"
+              placeholder="Enter cardholder's name"
+              value={formData.holderCreditCard}
+              onChange={handleChange}
+              required={true}
+            />
+            <InputField
+              label="National ID"
+              id="nationalId"
+              placeholder="Enter national ID"
+              value={formData.nationalId}
+              onChange={handleChange}
+              required={true}
+            />
+            <InputField
+              label="Credit Card Expiry Date"
+              id="creditCardExpiryDate"
+              type="date"
+              value={formData.creditCardExpiryDate}
+              onChange={handleChange}
+              required={true}
+            />
+          </div>
+      </Section>
+
+
+      
 
       <Section title="Vehicle Information">
         <div className="space-y-4">
@@ -534,10 +757,25 @@ export default function IntegratedCarRentalForm() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               ></textarea>
             </div>
+            <CarSelection
+                label="Car Model"
+                id="carModel"
+                value={formData.carModel}
+                onChange={handleChange}
+                required={true}
+              />
             <InputField label="Car Fuel" id="carFuel" placeholder="e.g., Petrol, Diesel, Electric" value={formData.carFuel} onChange={handleChange} required ={false}/>
             <InputField label="Car Rent Charges" id="rentCharges" type="number" placeholder="Enter daily rate" value={formData.rentCharges} onChange={handleChange} required ={false}/>
             <InputField label="Trip Start Date" id="rentalDate" type="date" value={formData.rentalDate} onChange={handleChange} required ={false}/>
             <InputField label="Rental Location" id="rentalLocation" placeholder="Enter pickup location" value={formData.rentalLocation} onChange={handleChange} required ={false}/>
+            <InputField
+                  label="Daily KM Value"
+                  id="dailyKmValue"
+                  placeholder="Enter daily KM allowance"
+                  value={formData.dailyKmValue}
+                  onChange={handleChange}
+                  required={true}
+                />
           </div>
           
           <div>
@@ -557,6 +795,21 @@ export default function IntegratedCarRentalForm() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Front View</h2>
+                <ImageEditor2 imageUrl={frontViewUrl} onSave={handleSaveFrontView} />
+                {/* Insert image saved Icon here  */}
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Rear View</h2>
+                <ImageEditor2 imageUrl={rearViewUrl} onSave={handleSaveRearView} />  
+                    {/* Insert image saved Icon here  */}
+              </div>
+
           </div>
           
           <FileInput label="Fuel Image" id="fuelImage"
@@ -587,7 +840,7 @@ export default function IntegratedCarRentalForm() {
       </div>
     </form>
     
-    {isClient && (
+    {isClient && showDownloadPdfButton &&  (
   <div className="mt-6 text-center">
     <PDFDownloadLink
       document={
@@ -596,6 +849,8 @@ export default function IntegratedCarRentalForm() {
           carImages={carImages}
           fuelImage={fuelImage}
           passportImage={passportImage}
+          companyLogo={companyLogo}
+          carViewImages={carViewImages}
         />
       }
       fileName={`${formData.fullName}.pdf`}

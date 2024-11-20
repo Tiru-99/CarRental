@@ -234,7 +234,7 @@ const cars = [
     },
     {
       id: 16,
-      name: 'Mazda CX-30',
+      name: 'Honda ZR-V',
       image: '/cars/car16.png',
       category: 'SUV',
       passengers: 4,
@@ -249,7 +249,7 @@ const cars = [
     },
     {
       id: 17,
-      name: 'Honda ZR-V',
+      name: 'Mazda CX-30',
       image: '/cars/car17.png',
       category: 'SUV',
       passengers: 4,
@@ -294,7 +294,7 @@ const cars = [
     },
     {
       id: 20,
-      name: 'Jeep Wrangler (Sahara)',
+      name: 'Mazda CX-30 Gray',
       image: '/cars/car20.png',
       category: 'SUV',
       passengers: 4,
@@ -309,7 +309,7 @@ const cars = [
     },
     {
       id: 21,
-      name: 'Mazda CX-30 (Gray)',
+      name: 'Cadillac CTS 2024',
       image: '/cars/car21.png',
       category: 'SUV',
       passengers: 4,
@@ -324,7 +324,7 @@ const cars = [
     },
     {
       id: 22,
-      name: 'Cadillac CTS 2004',
+      name: 'Nissan Patrol',
       image: '/cars/car22.png',
       category: 'Luxury',
       passengers: 4,
@@ -339,7 +339,7 @@ const cars = [
     },
     {
       id: 23,
-      name: 'Nissan Patrol',
+      name: 'Jeep Gladiator Sport (Silver)',
       image: '/cars/car23.png',
       category: 'SUV',
       passengers: 4,
@@ -354,7 +354,7 @@ const cars = [
     },
     {
       id: 24,
-      name: 'Jeep Gladiator Sport 2023',
+      name: 'Mercedes S580',
       image: '/cars/car24.png',
       category: 'SUV',
       passengers: 4,
