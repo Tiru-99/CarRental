@@ -12,8 +12,8 @@ const cars = [
       name: 'Mercedes G63',
       image: '/cars/car1.jpg',
       category: 'Luxury',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -21,14 +21,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '1600 AED'
     },
     {
       id: 2,
       name: 'Mercedes s500',
       image: '/cars/car2.webp',
       category: 'Luxury',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -36,14 +37,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '1000 AED'
     },
     {
       id: 3,
       name: 'Infiniti QX-50',
       image: '/cars/car3.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -51,14 +53,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 4,
       name: 'Honda HRV',
       image: '/cars/car4.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -66,14 +69,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 5,
       name: 'Chevrolet Trailblazer 2023',
       image: '/cars/car5.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -81,14 +85,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 6,
       name: 'Chevrolet Trailblazer',
       image: '/cars/car6.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -96,14 +101,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 7,
       name: 'Nissan-X-Trail',
       image: '/cars/car7.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 7,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -111,14 +117,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '200 AED'
     },
     {
       id: 8,
       name: 'Koleos',
       image: '/cars/car8.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -126,14 +133,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 9,
       name: 'Range Rover Defender',
       image: '/cars/car9.png',
       category: 'Luxury',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -141,14 +149,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '800 AED'
     },
     {
       id: 10,
       name: 'GMC Yukon Denali',
       image: '/cars/car10.png',
       category: 'Luxury',
-      passengers: 4,
-      bags: 4,
+      passengers: 7,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -156,14 +165,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '600 AED'
     },
     {
       id: 11,
       name: 'BMW X5',
       image: '/cars/car11.png',
       category: 'Luxury',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -171,14 +181,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '650 AED'
     },
     {
       id: 12,
       name: 'Chevy Tahoe',
       image: '/cars/car12.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 7,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -186,14 +197,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '500 AED'
     },
     {
       id: 13,
       name: 'Ford Bronco Sport',
       image: '/cars/car13.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -201,14 +213,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '200 AED'
     },
     {
       id: 14,
       name: 'Mazda CX-5',
       image: '/cars/car14.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -216,14 +229,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 15,
       name: 'Nissan Pathfinder',
       image: '/cars/car15.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 7,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -231,14 +245,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '325 AED'
     },
     {
       id: 16,
       name: 'Honda ZR-V',
       image: '/cars/car16.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -246,14 +261,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 17,
       name: 'Mazda CX-30',
       image: '/cars/car17.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -261,14 +277,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 18,
       name: 'MG HS Trophy',
       image: '/cars/car18.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -276,14 +293,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 19,
       name: 'Jeep Wrangler (Sahara)',
       image: '/cars/car19.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -291,14 +309,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '400 AED'
     },
     {
       id: 20,
       name: 'Mazda CX-30 Gray',
       image: '/cars/car20.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -306,14 +325,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 21,
       name: 'Cadillac CTS 2024',
       image: '/cars/car21.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -321,14 +341,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '225 AED'
     },
     {
       id: 22,
       name: 'Nissan Patrol',
       image: '/cars/car22.png',
       category: 'Luxury',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -336,14 +357,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '500 AED'
     },
     {
       id: 23,
       name: 'Jeep Gladiator Sport (Silver)',
       image: '/cars/car23.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 7,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -351,14 +373,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '185 AED'
     },
     {
       id: 24,
       name: 'Mercedes S580',
       image: '/cars/car24.png',
       category: 'SUV',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -366,14 +389,15 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '1400 AED'
     },
     {
       id: 25,
       name: 'Range Rover Rogue',
       image: '/cars/car25.png',
       category: 'Luxury',
-      passengers: 4,
-      bags: 4,
+      passengers: 5,
+      bags: 3,
       doors: 4,
       hasAC: true,
       mileage: '250 Kmpl',
@@ -381,6 +405,7 @@ const cars = [
       fuelPolicy: 'Level to Level',
       insurance: 'Basic',
       discount: true,
+      dailyCharges: '1400 AED'
     },
   ];
   
@@ -479,6 +504,10 @@ export default function Dashboard() {
                       <span>Discount included in Price</span>
                     </div>
                   )}
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-4 h-4" />
+                    <span>Daily Charges: {car.dailyCharges}</span>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -488,3 +517,4 @@ export default function Dashboard() {
     </div>
   )
 }
+

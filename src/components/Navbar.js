@@ -31,8 +31,12 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <Wave className="h-6 w-6 text-blue-600" />
-            <span className="text-sm sm:text-base">AUTOBREEZE</span>
+            <img 
+              src="/images/logo.png" 
+              alt="Logo" 
+              className="h-10 w-auto object-contain"
+            />
+           
           </Link>
 
           {/* Desktop Menu */}
