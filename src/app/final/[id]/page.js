@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation"; // Import useRouter here
 import TripDetails from "@/components/TripDetails"; // Adjust the import path as necessary
-import { getCarAndClientDetails , getFileDownloadURL } from "@/utils/appwriteConf";
+import { getCarAndClientDetails, getFileDownloadURL } from "@/utils/appwriteConf";
 import Navbar from "@/components/Navbar";
 import { isUserLoggedIn } from "@/utils/appwriteAuth";
 import { toast } from "react-toastify";
@@ -46,49 +46,54 @@ export default function UserPage() {
     if (userId) fetchDetails();
   }, [userId]);
 
-
   console.log("This is my tripDetails", tripDetails);
 
   const handleDownload = async (fileId) => {
-
-    console.log("this is my fileID" , fileId);
+    console.log("this is my fileID", fileId);
     if (!fileId) {
-        toast.error('Invalid file ID!');
-        return;
+      toast.error("Invalid file ID!");
+      return;
     }
 
     try {
-        // Get the download URL from Appwrite
-        const fileUrl = getFileDownloadURL(fileId);
+      // Get the download URL from Appwrite
+      const fileUrl = getFileDownloadURL(fileId);
 
-        console.log("This is my fileURl" , fileUrl);
-        
-        // Open the file in a new tab
-        window.open(fileUrl, '_blank');
-        
-        // Or download it directly
-        const anchor = document.createElement('a');
-        anchor.href = fileUrl;
-        anchor.download = `document-${Date.now()}.`;
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
+      console.log("This is my fileURl", fileUrl);
 
+      // Open the file in a new tab
+      window.open(fileUrl, "_blank");
+
+      // Or download it directly
+      const anchor = document.createElement("a");
+      anchor.href = fileUrl;
+      anchor.download = `document-${Date.now()}.`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
     } catch (error) {
-        console.error('Error downloading file:', error);
-        toast.error('Failed to download the file. Please try again.');
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download the file. Please try again.");
     }
-};
+  };
 
   if (loading) {
-    <Loader2 className="animate-spin mr-2" size={20} />
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
+      </div>
+    );
   }
 
   if (!tripDetails) {
-    return <div>Failed to fetch trip details. Please try again later.</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg text-gray-700">
+          Failed to fetch trip details. Please try again later.
+        </p>
+      </div>
+    );
   }
-
-
 
   return (
     <div className="p-4">
@@ -101,8 +106,8 @@ export default function UserPage() {
         carName={tripDetails.carInfo}
         chargesPerDay={tripDetails.rentCharges}
         startDate={tripDetails.rentalDate}
-        onDownloadPassportId={()=>handleDownload(tripDetails.passportImageId2)}
-        onDownloadEmiratesId={()=>handleDownload(tripDetails.emiratesImageId1)}
+        onDownloadPassportId={() => handleDownload(tripDetails.passportImageId2)}
+        onDownloadEmiratesId={() => handleDownload(tripDetails.emiratesImageId1)}
         onEmailId={() => console.log(`Send email to: ${tripDetails.email}`)}
         onEndTrip={() => console.log("End Trip clicked")}
       />
