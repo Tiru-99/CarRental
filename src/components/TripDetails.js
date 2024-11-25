@@ -22,13 +22,14 @@ const InputField = ({ label, id, type = 'text', placeholder, value, onChange, mi
 
 export default function TripDetails({
   userImage,
-  userName,
+  firstName,
+  lastName,
   userId,
   carName,
   chargesPerDay,
   startDate,
-  onDownloadPDF,
-  onEmailId,
+  onDownloadEmiratesId,
+  onDownloadPassportId,
   onEndTrip
 }) {
   const [endDate, setEndDate] = useState('')
@@ -61,26 +62,29 @@ export default function TripDetails({
           <div className="flex flex-col items-center space-y-4">
             <img
               src={userImage}
-              alt={userName}
+              alt={`${firstName} ${lastName}`}
               className="w-24 h-24 rounded-full object-cover"
             />
             <div className="text-center">
-              <h2 className="text-xl font-semibold">{userName}</h2>
+              <h2 className="text-xl font-semibold">{`${firstName} ${lastName}`}</h2>
               <p className="text-sm text-gray-500">ID: {userId}</p>
             </div>
             <div className="flex gap-2 w-full">
+             
               <button
-                onClick={onDownloadPDF}
+                onClick={onDownloadEmiratesId}
                 className="flex-1 px-4 py-2 text-sm font-medium text-green-600 bg-white border border-green-600 rounded-md hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               >
-                Download PDF
+                Download Emirates ID
               </button>
+
               <button
-                onClick={onEmailId}
-                className="flex-1 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                onClick={onDownloadPassportId}
+                className="flex-1 px-4 py-2 text-sm font-medium text-green-600 bg-white border border-green-600 rounded-md hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               >
-                Email Id
+                Download Passport
               </button>
+             
             </div>
           </div>
 

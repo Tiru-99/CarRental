@@ -1,16 +1,16 @@
 "use client"
 import React from "react";
 
-export default function ProfileCard({ name, id, onDownload, onEmail,profilePicture }) {
+export default function ProfileCard({ firstName , lastName , id , onDownload , onEmail  , profilePicture }) {
     return (
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="flex flex-col ">
           <img
             className="w-24 h-24 rounded-full object-cover mb-4"
             src={profilePicture}
-            alt={`${name}'s profile`}
+            alt={`${firstName} ${lastName}'s profile`}
           />
-          <h3 className="text-xl font-medium text-gray-900 mb-1">{name}</h3>
+          <h3 className="text-xl font-medium text-gray-900 mb-1">{`${firstName} ${lastName}`}</h3>
           <p className="text-sm text-gray-500 mb-4">ID: {id}</p>
           <div className="flex gap-2 w-full">
             <button

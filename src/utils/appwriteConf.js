@@ -73,6 +73,7 @@ const getFileDetails = (fileData) => {
 
 // Main upload function that handles both images and PDFs
 export const uploadFileToAppwrite = async (fileData, bucketId, fileType = null, customFileName = null) => {
+    console.log("This is my bucket Id in the conf page", bucketId); 
     try {
         let fileToUpload;
         
@@ -132,13 +133,10 @@ export const getEvents = async () => {
       // Map over the documents to format user objects
       const Users = response.documents.map((document) => ({
         $id: document.$id, // Correct property name for document ID
-        fullName: document.fullName,
+        firstName: document.firstName,
+        lastName:document.lastName,
         email: document.email,
-        pdfFileId: document.pdfFileId,
-        pdfFileUrl : storage.getFilePreview(
-            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-            document.pdfFileId
-        ),
+        pdfFileId2: document.pdfFileId2,
         passportImageId:document.passportImageId,
         passportImageUrl: storage.getFilePreview(
         process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, // Bucket ID for your storage
@@ -167,13 +165,19 @@ export const getEvents = async () => {
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID, 
         id
       );
+
+      console.log("This is my response on the backend side " , response);
   
       const details = {
         carInfo: response.carInfo,
         rentCharges: response.rentCharges,
         rentalDate: response.rentalDate,
-        fullName: response.fullName,
+        firstName: response.firstName,
+        lastName : response.lastName,
         email: response.email,
+        carInfo:response.carInfo,
+        passportImageId2 : response.passportImageId2,
+        emiratesImageId1 : response.emiratesImageId1,
         passportImageId: response.passportImageId,
         passportImageUrl: storage.getFilePreview(
           process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
@@ -188,7 +192,7 @@ export const getEvents = async () => {
     }
   };
 
-  export const getFileDownloadURL = ( fileId) => {
+  export const getFileDownloadURL = ( fileId ) => {
     try {
         const fileUrl = storage.getFileDownload(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID, fileId);
         return fileUrl;
@@ -197,4 +201,42 @@ export const getEvents = async () => {
         throw error;
     }
 };
+
+//controller to increment formId; 
+export const updateDocuments = async() =>{
+    try{
+        const document = await databases.getDocument(
+             process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+             process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID2,
+             process.env.NEXT_PUBLIC_APPWRITE_DOCUMENT_ID,
+            );
+
+        if(!document){
+            console.log("Something went wrong while fetching the document");
+        }
+
+        //converting the value to integer 
+        const currentValue = parseInt(document.formNo , 10);
+        console.log(currentValue);
+
+        if (isNaN(currentValue)) {
+            throw new Error(`The value of '${attributeName}' is not a valid number string.`);
+        }
+
+        //again converting it to the string 
+        const updatedDocument = (currentValue + 1).toString(); 
+        
+        const response = await databases.updateDocument(
+            process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+            process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID2,
+            process.env.NEXT_PUBLIC_APPWRITE_DOCUMENT_ID,
+            { formNo: updatedDocument}
+        )
+
+        console.log("Document updated Successfully" , response);
+
+    }catch(e){
+        console.log("Something is wrong with this code"  , e );
+    }
+}
 export { client, databases, storage };

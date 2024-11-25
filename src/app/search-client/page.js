@@ -37,7 +37,7 @@ export default function SearchClient() {
 
   useEffect(() => {
     const results = users.filter(user =>
-      user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+      `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
     )
     setFilteredUsers(results)
 
@@ -101,10 +101,11 @@ export default function SearchClient() {
             {filteredUsers.map((user) => (
               <Link  key={user.$id} href ={`/final/${user.$id}`}><ProfileCard
                
-                name={user.fullName}
+                firstName={user.firstName}
+                lastName={user.lastName}
                 id={user.$id}
                 profilePicture={user.passportImageUrl}
-                onDownload={() => handleDownload(user.pdfFileId)}
+                onDownload={() => handleDownload(user.pdfFileId2)}
                 onEmail={() => handleEmail(user.email)}
               /></Link>
             ))}
