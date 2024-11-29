@@ -540,7 +540,7 @@ const PdfModifier = ({formData , carViewImages , formId}) => {
           cursor: "pointer",
         }}
       >
-        Modify and Download PDF
+         Download PDF
         
       </button>
     </div>
