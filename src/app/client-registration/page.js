@@ -1005,8 +1005,7 @@ export default function IntegratedCarRentalForm() {
                 {/*insert image saved Icon Here */}
                 {carViewImages.frontView && (
                   <div className="mt-2">
-                    <img src={fuelImage} alt="Fuel Image" className="w-32 h-32 object-cover" />
-                    <span className="text-sm text-green-600">✓ Fuel image uploaded</span>
+                    <span className="text-sm text-green-600">Front View Image uploaded</span>
                   </div>
           )}
               </div>
@@ -1014,10 +1013,9 @@ export default function IntegratedCarRentalForm() {
               <div>
                 <h2 className="text-2xl font-bold mb-4">Rear View</h2>
                 <ImageEditor2 imageUrl={rearViewUrl} onSave={handleSaveRearView} />  
-                {carViewImages.frontView && (
+                {carViewImages.rearView && (
                   <div className="mt-2">
-                    <img src={fuelImage} alt="Fuel Image" className="w-32 h-32 object-cover" />
-                    <span className="text-sm text-green-600">✓ Fuel image uploaded</span>
+                    <span className="text-sm text-green-600">✓ Rear View Image uploaded</span>
                   </div>
                 )}
               </div>
