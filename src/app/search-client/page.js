@@ -6,10 +6,12 @@ import { getEvents } from "@/utils/appwriteConf"
 import Navbar from "@/components/Navbar"
 import { Search } from 'lucide-react'
 import Link from "next/link"
+import { isUserLoggedIn } from "@/utils/appwriteAuth"
 import { getFileDownloadURL } from "@/utils/appwriteConf"
 import { toast } from "react-toastify"
 import axios from "axios"
 import Loader from "@/components/Loader"
+import { useRouter } from "next/navigation"
 
 
 export default function SearchClient() {
@@ -18,8 +20,20 @@ export default function SearchClient() {
   const [hoveredUserId, setHoveredUserId] = useState(null)
   const[isLoading , setIsLoading] = useState(false);
 
- 
+  const router = useRouter(); 
   const [searchTerm, setSearchTerm] = useState("")
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const status = await isUserLoggedIn();
+      if (!status.success) {
+        toast.error("You need to be logged in first to use the app")
+        router.push("/signin"); // Redirect to login page if not logged in
+      }
+    };
+
+    checkUser();
+  },[router])
 
   useEffect(() => {
     const fetchUsers = async () => {
