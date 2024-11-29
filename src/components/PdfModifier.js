@@ -528,7 +528,6 @@ const PdfModifier = ({formData , carViewImages , formId}) => {
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h2>Modify Existing PDF with Text and Image</h2>
       <button
         onClick={modifyPdf}
         style={{
