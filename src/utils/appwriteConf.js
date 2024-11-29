@@ -1,5 +1,7 @@
+
 import { Client, Databases, Storage } from 'appwrite';
 import { ID } from 'appwrite';
+
 
 // Client configuration
 const client = new Client();
@@ -239,4 +241,7 @@ export const updateDocuments = async() =>{
         console.log("Something is wrong with this code"  , e );
     }
 }
+
+
+
 export { client, databases, storage };

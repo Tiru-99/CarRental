@@ -651,7 +651,7 @@ export default function IntegratedCarRentalForm() {
   const requiredFields = [
     'firstName','lastName', 'email', 'phone', 'address', 'dob', 'passportId',
     'passportIssueDate', 'passportExpiryDate', 'emiratesId',
-    'licenseNumber', 'licenseIssueDate', 'licenseExpiryDate', 
+    'licenseNumber', 'licenseIssueDate', 'licenseExpiryDate',
     'carInfo', 'carFuel', 'rentCharges', 'rentalDate', 'rentalLocation',
   ];
 

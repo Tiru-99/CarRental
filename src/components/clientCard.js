@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 
-export default function ProfileCard({ firstName , lastName , id , onDownload , onEmail  , profilePicture }) {
+export default function ProfileCard({ firstName , lastName , id , onDownload , profilePicture }) {
     return (
       <div className="bg-white rounded-lg p-6 shadow-sm">
         <div className="flex flex-col ">
@@ -19,12 +19,7 @@ export default function ProfileCard({ firstName , lastName , id , onDownload , o
             >
               Download PDF
             </button>
-            <button
-              onClick={onEmail}
-              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Email Id
-            </button>
+         
           </div>
         </div>
       </div>

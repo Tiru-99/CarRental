@@ -8,11 +8,16 @@ import { Search } from 'lucide-react'
 import Link from "next/link"
 import { getFileDownloadURL } from "@/utils/appwriteConf"
 import { toast } from "react-toastify"
+import axios from "axios"
+import Loader from "@/components/Loader"
 
 
 export default function SearchClient() {
   const [users, setUsers] = useState([])
   const [filteredUsers, setFilteredUsers] = useState([])
+  const [hoveredUserId, setHoveredUserId] = useState(null)
+  const[isLoading , setIsLoading] = useState(false);
+
  
   const [searchTerm, setSearchTerm] = useState("")
 
@@ -43,12 +48,29 @@ export default function SearchClient() {
 
   }, [searchTerm, users])
 
- 
 
-  const handleEmail = (email) => {
-    alert(`Sending email to: ${email}`)
-    // Add email functionality if needed
-  }
+
+const sendPdf = async (documentId) => {
+
+  setIsLoading(true);
+
+  console.log("this is my documentID for sending email" , documentId);
+    try {
+        const response = await axios.post('/api/email',  {documentId : documentId} );
+
+        if (response.status === 200) {
+            toast.success("Email to the client sent successfully");
+            setIsLoading(false);
+        } else {
+            console.error("Error:", response.data.error);
+        }
+    } catch (error) {
+        console.error("Error in sendPdf:", error.message);
+    }finally{
+      setIsLoading(false);
+    }
+};
+
 
   const handleDownload = async (fileId) => {
     if (!fileId) {
@@ -98,23 +120,45 @@ export default function SearchClient() {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredUsers.map((user) => (
-              <Link  key={user.$id} href ={`/final/${user.$id}`}><ProfileCard
-               
-                firstName={user.firstName}
-                lastName={user.lastName}
-                id={user.$id}
-                profilePicture={user.passportImageUrl}
-                onDownload={() => handleDownload(user.pdfFileId2)}
-                onEmail={() => handleEmail(user.email)}
-              /></Link>
-            ))}
+      {filteredUsers.map((user) => (
+        <div key={user.$id} className="relative group">
+          <Link href={`/final/${user.$id}`}>
+            <ProfileCard
+              firstName={user.firstName}
+              lastName={user.lastName}
+              id={user.$id}
+              profilePicture={user.passportImageUrl}
+              onDownload={() => handleDownload(user.pdfFileId2)}
+            />
+          </Link>
+          <div className="absolute top-2 right-2 z-10">
+            <button 
+              onClick={() => sendPdf(user.$id)} 
+              onMouseEnter={() => setHoveredUserId(user.$id)}
+              onMouseLeave={() => setHoveredUserId(null)}
+              className="bg-green-500 text-white rounded-full p-2 hover:bg-green-600 transition-all duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
+              aria-label="Send Email"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+              </svg>
+            </button>
+            {hoveredUserId === user.$id && (
+              <div className="absolute right-0 mt-2 py-1 px-2 bg-gray-800 text-white text-xs rounded shadow-lg whitespace-nowrap">
+                Send Email
+              </div>
+            )}
           </div>
+        </div>
+      ))}
+    </div>
           {filteredUsers.length === 0 && (
             <p className="text-center text-gray-500 mt-8">No users found matching your search.</p>
           )}
         </div>
       </div>
+      {isLoading && <Loader/>}
     </>
   )
 }
